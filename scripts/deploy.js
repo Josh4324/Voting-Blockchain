@@ -24,7 +24,7 @@ async function main() {
 
   //deploying the manage contract
   const ManageVoting = await hre.ethers.getContractFactory("ManageVoting");
-  const manageVoting = await ManageVoting.deploy();
+  const manageVoting = await ManageVoting.deploy(voting.address);
 
   await manageVoting.deployed();
 

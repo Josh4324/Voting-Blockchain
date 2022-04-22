@@ -9,8 +9,12 @@ contract Voting {
     //enable/disable voting
     bool public votingStatus;
 
+    bool public isControlledVoting;
+
     constructor () {
         votingStatus = true;
+
+        isControlledVoting = false;
     }
 
     //EVENTS
@@ -30,7 +34,9 @@ contract Voting {
     //MAPPING
     //maps all candidate
     mapping(uint256 => Candidate) allCandidates;
-    
+    //eligible addresses that can vote
+    mapping(address => bool) public eligibleVoters;
+
     //maps address of all stakeholder that vote
     mapping(address => bool) allVoters;
 
@@ -42,10 +48,15 @@ contract Voting {
     //checks for who can vote
     //user can only vote once
     //Voting must be enabled
+    //address must be eligible
     modifier canVote {
-        require(!allVoters[msg.sender], "You can vote only once");
+        if(isControlledVoting) {
+            require(eligibleVoters[msg.sender] == true, "You are not allowed to vote!");
+        }
+
+        require(!allVoters[msg.sender] == true, "You can vote only once");
         require(candidateCount > 0, "No candidate added");
-        require(votingStatus, "Voting closed");
+        require(votingStatus == true, "Voting closed");
         _;
     }
 
@@ -54,6 +65,30 @@ contract Voting {
             //a name can only be registered once
             require(!candidateNames[_name], "Name already exists"  );
             _;
+    }
+
+    //FUNCTIONS
+
+    //isControlledVoting
+    function isControlled()
+    public {
+        isControlledVoting = true;
+    }
+
+
+    //add eligible voters
+    function registerVoters (address _adr)
+    public 
+    returns(bool) {
+        eligibleVoters[_adr] = true;
+        return true;
+    }
+
+    function removeVoters (address _adr)
+    public 
+    returns(bool) {
+        eligibleVoters[_adr] = false;
+        return true;
     }
 
 
@@ -69,7 +104,7 @@ contract Voting {
         //increment the count each time a candidate is added
         candidateCount++;
 
-        //sets users added
+        //sets candidate added
         candidateNames[_name] = true;
 
         //event
