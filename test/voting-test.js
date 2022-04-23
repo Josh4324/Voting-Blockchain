@@ -118,7 +118,7 @@ describe("Voting", () => {
       const result = await voting.compileResult();
 
       //test for the values
-      expect(await result[0][0]).to.equal("Harry");
+      expect(await result[0][0]).to.equal("kehinde");
       expect(await result[1][0].toNumber()).to.equal(1);
       expect(await result[0][1]).to.equal("test");
       expect(await result[1][1].toNumber()).to.equal(0);
@@ -130,7 +130,7 @@ describe("Voting", () => {
 
   //Enable voting
   describe("enable voting", function () {
-    it("Should enable voting for user", async function (){
+    it("Should enable voting for user", async function () {
       await voting.deployed();
       assert(true)
 
@@ -142,17 +142,19 @@ describe("Voting", () => {
   });
   
 
-    //Disable voting
-    describe("disable voting", function () {
-      it("Should disable voting for user", async function (){
-        await voting.deployed();
-        assert(false)
   
-        //enable vote
-        const disable = await voting.disableVoting();
-  
-        expect(await disable[0][0]).to.equal("kehinde");
-      });
-    });
+  //Disable voting
+  describe("disable voting", function () {
+    it("Should disable voting for user", async function () {
+      await voting.deployed();
+      assert(true)
 
+      //disable vote
+      const disable = await voting.disableVoting();
+
+      expect(await disable[0][0]).to.equal("kehinde");
+    });
+  });
+  
+ 
 })
